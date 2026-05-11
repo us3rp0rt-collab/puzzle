@@ -5,35 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Krtek Memory</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:#1a0a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
-  header{width:100%;padding:env(safe-area-inset-top,16px) 16px 8px;text-align:center}
-  h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.3px}
-  h1 span{color:#ffd700}
-  .stats{display:flex;gap:12px;justify-content:center;margin:6px 0 10px;flex-wrap:wrap}
-  .stat{background:rgba(255,255,255,0.12);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;color:#fff}
-  .stat em{color:#ffd700;font-style:normal}
-  #board{display:grid;gap:5px;padding:0 10px 20px;width:100%;max-width:430px}
-  .card{aspect-ratio:1;border-radius:12px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s cubic-bezier(.4,0,.2,1);-webkit-tap-highlight-color:transparent}
-  .card.flip{transform:rotateY(180deg)}
-  .card.matched{animation:match .5s ease forwards}
-  @keyframes match{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.12)}100%{transform:rotateY(180deg) scale(1)}}
-  .face{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .back{background:linear-gradient(135deg,#4a1f8c,#2a0e5c);border:2px solid rgba(255,255,255,0.15)}
-  .back svg{width:54%;height:54%;opacity:0.5}
-  .front{transform:rotateY(180deg);background:#fff;padding:3px}
-  .front canvas{width:100%;height:100%;border-radius:8px;display:block}
-  .card.matched .front{box-shadow:0 0 0 3px #ffd700 inset}
-  #msg{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:24px}
-  #msg.show{display:flex}
-  .msg-box{background:#1a0a2e;border:2px solid #ffd700;border-radius:24px;padding:32px 28px;text-align:center;max-width:320px}
-  .msg-box h2{font-size:26px;color:#ffd700;margin-bottom:8px}
-  .msg-box p{color:#fff;font-size:15px;line-height:1.5;margin-bottom:20px}
-  .btn{background:#ffd700;color:#1a0a2e;border:none;border-radius:40px;padding:14px 36px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
-  .btn:active{transform:scale(0.96)}
-  #diffSel{display:flex;gap:8px;margin-bottom:16px}
-  .dBtn{flex:1;padding:10px;border-radius:20px;border:2px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
-  .dBtn.active{background:#ffd700;color:#1a0a2e;border-color:#ffd700}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:#1a0a2e;min-height:100dvh;display:flex;flex-direction:column;align-items:center}
+header{width:100%;padding:max(env(safe-area-inset-top),12px) 16px 6px;text-align:center}
+h1{font-size:20px;font-weight:700;color:#fff}
+h1 span{color:#ffd700}
+.stats{display:flex;gap:8px;justify-content:center;margin:5px 0 8px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,0.12);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#fff}
+.stat em{color:#ffd700;font-style:normal}
+#board{display:grid;gap:6px;padding:0 10px 20px;width:100%;max-width:430px}
+.card{aspect-ratio:1;border-radius:14px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.card.flip{transform:rotateY(180deg)}
+.card.matched{animation:pop .4s ease forwards}
+@keyframes pop{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.1)}100%{transform:rotateY(180deg) scale(1)}}
+.face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
+.back{background:linear-gradient(135deg,#3d1a7a,#1a0a40);border:2.5px solid rgba(255,255,255,0.2);flex-direction:column;gap:2px}
+.back-icon{font-size:36px;opacity:.6}
+.front{transform:rotateY(180deg);border:3px solid transparent;flex-direction:column;overflow:hidden}
+.card.matched .front{border-color:#ffd700;box-shadow:0 0 12px rgba(255,215,0,.5)}
+.card-emoji{line-height:1}
+.card-label{font-size:10px;font-weight:700;text-align:center;padding:0 2px;line-height:1.2;letter-spacing:-0.2px}
+#msg{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:24px}
+#msg.show{display:flex}
+.msg-box{background:#1a0a2e;border:2px solid #ffd700;border-radius:24px;padding:28px 24px;text-align:center;max-width:300px;width:100%}
+.msg-box h2{font-size:24px;color:#ffd700;margin-bottom:6px}
+.msg-box p{color:#fff;font-size:14px;line-height:1.5;margin-bottom:16px}
+.diff-row{display:flex;gap:8px;margin-bottom:14px}
+.dBtn{flex:1;padding:9px 4px;border-radius:20px;border:2px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.dBtn.active{background:#ffd700;color:#1a0a2e;border-color:#ffd700}
+.btn{background:#ffd700;color:#1a0a2e;border:none;border-radius:40px;padding:13px 36px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.btn:active{transform:scale(0.97)}
 </style>
 </head>
 <body>
@@ -42,438 +43,180 @@
   <div class="stats">
     <div class="stat">Züge: <em id="moves">0</em></div>
     <div class="stat">Paare: <em id="found">0</em>/<em id="total">0</em></div>
-    <div class="stat">Zeit: <em id="timer">0:00</em></div>
+    <div class="stat">⏱ <em id="timer">0:00</em></div>
   </div>
 </header>
 <div id="board"></div>
+
 <div id="msg">
   <div class="msg-box">
-    <h2 id="msgTitle">🎉 Gewonnen!</h2>
-    <p id="msgText"></p>
-    <div id="diffSel">
-      <button class="dBtn active" onclick="setDiff(4)">4×4</button>
-      <button class="dBtn" onclick="setDiff(6)">6×6</button>
-      <button class="dBtn" onclick="setDiff(8)">8×8</button>
+    <h2 id="msgTitle">🐾 Krtek Memory</h2>
+    <p id="msgText">Finde alle Paare! Wähle die Schwierigkeit:</p>
+    <div class="diff-row">
+      <button class="dBtn active" data-d="4" onclick="setDiff(4,this)">4×4<br><span style="font-size:10px;opacity:.7">8 Paare</span></button>
+      <button class="dBtn" data-d="6" onclick="setDiff(6,this)">6×6<br><span style="font-size:10px;opacity:.7">18 Paare</span></button>
+      <button class="dBtn" data-d="8" onclick="setDiff(8,this)">8×8<br><span style="font-size:10px;opacity:.7">32 Paare</span></button>
     </div>
-    <button class="btn" onclick="startGame()">Neues Spiel</button>
+    <button class="btn" onclick="startGame()">▶ Spiel starten</button>
   </div>
 </div>
 
 <script>
-const ANIMALS = [
-  {name:'mole_umbrella', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#2d2d2d';roundRect(ctx,x+.3*s,y+.55*s,.4*s,.35*s,s*.08);
-    ctx.fillStyle='#555';roundRect(ctx,x+.25*s,y+.4*s,.5*s,.2*s,s*.06);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.35*s,.22*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.43*s,.12*s,.1*s);
-    ctx.strokeStyle='#888';ctx.lineWidth=s*.03;
-    ctx.beginPath();ctx.moveTo(x+.5*s,y+.15*s);ctx.lineTo(x+.5*s,y+.4*s);ctx.stroke();
-    ctx.fillStyle='#e74c3c';
-    ctx.beginPath();ctx.arc(x+.5*s,y+.12*s,s*.18,Math.PI,0);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#c0392b';
-    for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(x+(.32+i*.09)*s,y+.12*s);ctx.lineTo(x+(.36+i*.09)*s,y+.22*s);ctx.lineTo(x+(.4+i*.09)*s,y+.12*s);ctx.closePath();ctx.fill();}
-  }},
-  {name:'rabbit_stand', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#c8b89a';roundRect(ctx,x+.3*s,y+.45*s,.4*s,.45*s,s*.1);
-    ctx.fillStyle='#d4c4a8';ellipse(ctx,x+.5*s,y+.38*s,.2*s,.22*s);
-    ctx.fillStyle='#c8b89a';
-    roundRect(ctx,x+.3*s,y+.05*s,.12*s,.32*s,s*.06);
-    roundRect(ctx,x+.58*s,y+.05*s,.12*s,.32*s,s*.06);
-    ctx.fillStyle='#f9b8c0';
-    roundRect(ctx,x+.34*s,y+.07*s,.05*s,.26*s,s*.03);
-    roundRect(ctx,x+.62*s,y+.07*s,.05*s,.26*s,s*.03);
-    ctx.fillStyle='#444';ellipse(ctx,x+.44*s,y+.36*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.36*s,.04*s,.04*s);
-    ctx.fillStyle='#f9b8c0';ellipse(ctx,x+.5*s,y+.41*s,.04*s,.03*s);
-  }},
-  {name:'hedgehog', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#8B6914';ellipse(ctx,x+.5*s,y+.6*s,.38*s,.25*s);
-    ctx.fillStyle='#6B4F10';
-    for(let i=0;i<12;i++){
-      const a=-Math.PI+i*Math.PI/6,r=.38*s;
-      ctx.beginPath();ctx.moveTo(x+.5*s+r*.7*Math.cos(a),y+.6*s+r*.5*Math.sin(a));
-      ctx.lineTo(x+.5*s+r*Math.cos(a-0.2),y+.6*s+r*Math.sin(a-0.2));
-      ctx.lineTo(x+.5*s+r*Math.cos(a+0.2),y+.6*s+r*Math.sin(a+0.2));
-      ctx.closePath();ctx.fill();
-    }
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.38*s,y+.55*s,.18*s,.18*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.34*s,y+.52*s,.04*s,.04*s);
-    ctx.fillStyle='#c94040';ellipse(ctx,x+.32*s,y+.58*s,.03*s,.02*s);
-  }},
-  {name:'mole_wave', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#2d2d2d';roundRect(ctx,x+.3*s,y+.5*s,.4*s,.38*s,s*.1);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.4*s,.22*s,.22*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.48*s,.1*s,.08*s);
-    ctx.fillStyle='#444';ellipse(ctx,x+.44*s,y+.37*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.37*s,.04*s,.04*s);
-    ctx.fillStyle='#2d2d2d';
-    ctx.beginPath();ctx.moveTo(x+.7*s,y+.42*s);
-    ctx.quadraticCurveTo(x+.85*s,y+.3*s,x+.75*s,y+.2*s);
-    ctx.lineWidth=s*.06;ctx.strokeStyle='#2d2d2d';ctx.stroke();
-    ctx.fillStyle='#f4c06f';roundRect(ctx,x+.68*s,y+.16*s,.18*s,.12*s,s*.04);
-  }},
-  {name:'mouse_cheese', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#888';roundRect(ctx,x+.3*s,y+.45*s,.4*s,.42*s,s*.1);
-    ctx.fillStyle='#aaa';ellipse(ctx,x+.5*s,y+.38*s,.2*s,.2*s);
-    ctx.fillStyle='#777';
-    roundRect(ctx,x+.28*s,y+.1*s,.1*s,.3*s,s*.05);
-    roundRect(ctx,x+.62*s,y+.1*s,.1*s,.3*s,s*.05);
-    ctx.fillStyle='#f5d342';
-    ctx.beginPath();ctx.moveTo(x+.55*s,y+.55*s);
-    ctx.lineTo(x+.85*s,y+.5*s);ctx.lineTo(x+.85*s,y+.75*s);ctx.lineTo(x+.55*s,y+.75*s);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#c9a800';
-    ellipse(ctx,x+.65*s,y+.6*s,.04*s,.04*s);
-    ellipse(ctx,x+.78*s,y+.58*s,.03*s,.03*s);
-    ellipse(ctx,x+.73*s,y+.7*s,.03*s,.03*s);
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.36*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.36*s,.03*s,.03*s);
-  }},
-  {name:'mole_dirt', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#8B6914';
-    ctx.beginPath();ctx.ellipse(x+.5*s,y+.82*s,.42*s,.2*s,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#a07d20';
-    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.arc(x+.5*s+.3*s*Math.cos(a),y+.82*s+.1*s*Math.sin(a),.06*s,0,Math.PI*2);ctx.fill();}
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.42*s,.25*s,.3*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.38*s,.2*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.46*s,.1*s,.08*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.35*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.35*s,.04*s,.04*s);
-  }},
-  {name:'rabbit_cake', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#c8b89a';ellipse(ctx,x+.5*s,y+.4*s,.2*s,.2*s);
-    roundRect(ctx,x+.28*s,y+.08*s,.1*s,.3*s,s*.05);
-    roundRect(ctx,x+.62*s,y+.08*s,.1*s,.3*s,s*.05);
-    ctx.fillStyle='#f9b8c0';
-    roundRect(ctx,x+.31*s,y+.1*s,.05*s,.25*s,s*.03);
-    roundRect(ctx,x+.64*s,y+.1*s,.05*s,.25*s,s*.03);
-    ctx.fillStyle='#f4a460';roundRect(ctx,x+.22*s,y+.65*s,.56*s,.2*s,s*.05);
-    ctx.fillStyle='#fff';roundRect(ctx,x+.22*s,y+.58*s,.56*s,.12*s,s*.04);
-    ctx.fillStyle='#e74c3c';ellipse(ctx,x+.38*s,y+.55*s,.04*s,.06*s);
-    ellipse(ctx,x+.5*s,y+.53*s,.04*s,.06*s);
-    ellipse(ctx,x+.62*s,y+.55*s,.04*s,.06*s);
-    ctx.fillStyle='#ffd700';
-    for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(x+(.35+i*.12)*s,y+.55*s);ctx.lineTo(x+(.35+i*.12)*s,y+.45*s);ctx.lineWidth=s*.02;ctx.strokeStyle='#aaa';ctx.stroke();ctx.fillStyle='#e74c3c';ellipse(ctx,x+(.35+i*.12)*s,y+.44*s,.02*s,.03*s);}
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.38*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.38*s,.03*s,.03*s);
-  }},
-  {name:'mole_ball', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.45*s,.25*s,.3*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.35*s,.2*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.43*s,.1*s,.08*s);
-    ctx.fillStyle='#e74c3c';ellipse(ctx,x+.6*s,y+.7*s,.2*s,.2*s);
-    ctx.strokeStyle='#fff';ctx.lineWidth=s*.02;
-    ctx.beginPath();ctx.arc(x+.6*s,y+.7*s,s*.18,0,.4*Math.PI);ctx.stroke();
-    ctx.beginPath();ctx.arc(x+.6*s,y+.7*s,s*.18,.8*Math.PI,1.4*Math.PI);ctx.stroke();
-    ctx.beginPath();ctx.arc(x+.6*s,y+.7*s,s*.18,1.6*Math.PI,2.2*Math.PI);ctx.stroke();
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.32*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.32*s,.04*s,.04*s);
-  }},
-  {name:'mole_flower', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#228B22';ctx.lineWidth=s*.02;
-    ctx.beginPath();ctx.moveTo(x+.7*s,y+.9*s);ctx.quadraticCurveTo(x+.75*s,y+.5*s,x+.65*s,y+.35*s);ctx.strokeStyle='#228B22';ctx.lineWidth=s*.04;ctx.stroke();
-    ['#e74c3c','#ff8c00','#f1c40f','#9b59b6','#e91e63'].forEach((col,i)=>{
-      ctx.fillStyle=col;ellipse(ctx,x+.65*s+.1*s*Math.cos(i*1.26),y+.3*s+.08*s*Math.sin(i*1.26),.06*s,.06*s);
-    });
-    ctx.fillStyle='#f4d03f';ellipse(ctx,x+.65*s,y+.3*s,.07*s,.07*s);
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.4*s,y+.45*s,.25*s,.3*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.4*s,y+.35*s,.2*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.4*s,y+.43*s,.1*s,.08*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.34*s,y+.32*s,.04*s,.04*s);
-    ellipse(ctx,x+.46*s,y+.32*s,.04*s,.04*s);
-  }},
-  {name:'hedgehog_food', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#8B6914';ellipse(ctx,x+.5*s,y+.55*s,.35*s,.28*s);
-    ctx.fillStyle='#6B4F10';
-    for(let i=0;i<10;i++){
-      const a=-Math.PI*.8+i*Math.PI*.16,r=.35*s;
-      ctx.beginPath();ctx.moveTo(x+.5*s+r*.65*Math.cos(a),y+.55*s+r*.65*Math.sin(a));
-      ctx.lineTo(x+.5*s+r*1.1*Math.cos(a-0.15),y+.55*s+r*.9*Math.sin(a-0.15));
-      ctx.lineTo(x+.5*s+r*1.1*Math.cos(a+0.15),y+.55*s+r*.9*Math.sin(a+0.15));
-      ctx.closePath();ctx.fill();
-    }
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.36*s,y+.5*s,.18*s,.15*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.3*s,y+.47*s,.03*s,.03*s);
-    ctx.fillStyle='#f5d342';roundRect(ctx,x+.55*s,y+.62*s,.3*s,.22*s,s*.04);
-    ctx.fillStyle='#e67e22';
-    ellipse(ctx,x+.63*s,y+.7*s,.04*s,.04*s);
-    ellipse(ctx,x+.75*s,y+.68*s,.03*s,.03*s);
-    ellipse(ctx,x+.7*s,y+.78*s,.03*s,.03*s);
-  }},
-  {name:'mole_candle', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#3498db';roundRect(ctx,x+.44*s,y+.55*s,.12*s,.3*s,s*.03);
-    ctx.fillStyle='#e74c3c';roundRect(ctx,x+.42*s,y+.52*s,.16*s,.08*s,s*.02);
-    ctx.fillStyle='#aaa';ctx.lineWidth=s*.02;ctx.beginPath();ctx.moveTo(x+.5*s,y+.52*s);ctx.lineTo(x+.5*s,y+.44*s);ctx.stroke();
-    ctx.fillStyle='#ffd700';
-    ctx.beginPath();ctx.ellipse(x+.5*s,y+.42*s,.04*s,.06*s,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#ff6b00';ctx.beginPath();ctx.ellipse(x+.5*s,y+.4*s,.02*s,.04*s,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.32*s,.25*s,.28*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.25*s,.2*s,.18*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.22*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.22*s,.04*s,.04*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.31*s,.08*s,.06*s);
-  }},
-  {name:'mouse_bucket', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#888';ellipse(ctx,x+.5*s,y+.38*s,.2*s,.18*s);
-    roundRect(ctx,x+.3*s,y+.45*s,.4*s,.38*s,s*.1);
-    ctx.fillStyle='#aaa';
-    roundRect(ctx,x+.3*s,y+.1*s,.1*s,.28*s,s*.05);
-    roundRect(ctx,x+.6*s,y+.1*s,.1*s,.28*s,s*.05);
-    ctx.fillStyle='#e74c3c';
-    ctx.beginPath();ctx.moveTo(x+.35*s,y+.65*s);ctx.lineTo(x+.65*s,y+.65*s);ctx.lineTo(x+.62*s,y+.88*s);ctx.lineTo(x+.38*s,y+.88*s);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#c0392b';ctx.fillRect(x+.35*s,y+.65*s,.3*s,s*.04);
-    ctx.fillStyle='#fff';ctx.font=`${s*.15}px Arial`;ctx.textAlign='center';
-    ctx.fillText('💧',x+.5*s,y+.82*s);
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.36*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.36*s,.03*s,.03*s);
-  }},
-  {name:'mole_swim', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#3498db';
-    ctx.beginPath();ctx.ellipse(x+.5*s,y+.75*s,.45*s,.18*s,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#e74c3c';roundRect(ctx,x+.2*s,y+.55*s,.6*s,.15*s,s*.08);
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.4*s,.25*s,.28*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.32*s,.2*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.4*s,.1*s,.08*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.29*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.29*s,.04*s,.04*s);
-  }},
-  {name:'rabbit_flowers', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#c8b89a';ellipse(ctx,x+.5*s,y+.42*s,.2*s,.2*s);
-    roundRect(ctx,x+.28*s,y+.1*s,.1*s,.32*s,s*.05);
-    roundRect(ctx,x+.62*s,y+.1*s,.1*s,.32*s,s*.05);
-    ctx.fillStyle='#f9b8c0';
-    roundRect(ctx,x+.31*s,y+.12*s,.05*s,.26*s,s*.03);
-    roundRect(ctx,x+.64*s,y+.12*s,.05*s,.26*s,s*.03);
-    ctx.fillStyle='#c8b89a';roundRect(ctx,x+.3*s,y+.5*s,.4*s,.38*s,s*.1);
-    ['#e74c3c','#ff69b4','#f1c40f','#e91e63','#9b59b6','#ff8c00'].forEach((col,i)=>{
-      ctx.fillStyle=col;ellipse(ctx,x+(.58+.08*Math.cos(i*1.05))*s,y+(.62+.08*Math.sin(i*1.05))*s,.06*s,.06*s);
-    });
-    ctx.fillStyle='#228B22';ctx.lineWidth=s*.025;
-    ctx.beginPath();ctx.moveTo(x+.58*s,y+.68*s);ctx.lineTo(x+.58*s,y+.88*s);ctx.strokeStyle='#228B22';ctx.stroke();
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.4*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.4*s,.03*s,.03*s);
-  }},
-  {name:'mole_mushroom', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#e74c3c';
-    ctx.beginPath();ctx.arc(x+.5*s,y+.38*s,s*.22,Math.PI,0);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#fff';
-    ellipse(ctx,x+.38*s,y+.33*s,.06*s,.06*s);
-    ellipse(ctx,x+.55*s,y+.28*s,.05*s,.05*s);
-    ellipse(ctx,x+.62*s,y+.38*s,.04*s,.04*s);
-    ctx.fillStyle='#f5e6c8';roundRect(ctx,x+.42*s,y+.38*s,.16*s,.25*s,s*.04);
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.56*s,.22*s,.25*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.48*s,.18*s,.17*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.56*s,.09*s,.07*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.46*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.46*s,.03*s,.03*s);
-  }},
-  {name:'hedgehog_number', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#8B6914';ellipse(ctx,x+.5*s,y+.58*s,.38*s,.28*s);
-    ctx.fillStyle='#6B4F10';
-    for(let i=0;i<14;i++){
-      const a=-Math.PI*.9+i*Math.PI*.13;
-      ctx.beginPath();ctx.moveTo(x+.5*s+.28*s*Math.cos(a),y+.58*s+.22*s*Math.sin(a));
-      ctx.lineTo(x+.5*s+.42*s*Math.cos(a-0.12),y+.58*s+.32*s*Math.sin(a-0.12));
-      ctx.lineTo(x+.5*s+.42*s*Math.cos(a+0.12),y+.58*s+.32*s*Math.sin(a+0.12));
-      ctx.closePath();ctx.fill();
-    }
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.35*s,y+.52*s,.18*s,.16*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.29*s,y+.49*s,.03*s,.03*s);
-    ctx.fillStyle='#e74c3c';roundRect(ctx,x+.55*s,y+.45*s,.2*s,.2*s,s*.04);
-    ctx.fillStyle='#fff';ctx.font=`bold ${s*.14}px Arial`;ctx.textAlign='center';
-    ctx.fillText('9',x+.65*s,y+.59*s);
-  }},
-  {name:'bee_pear', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#8fbe4f';
-    ctx.beginPath();ctx.ellipse(x+.65*s,y+.55*s,.2*s,.28*s,0,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.ellipse(x+.65*s,y+.3*s,.13*s,.15*s,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#5a8f20';ctx.lineWidth=s*.025;ctx.beginPath();ctx.moveTo(x+.65*s,y+.16*s);ctx.lineTo(x+.6*s,y+.08*s);ctx.strokeStyle='#5a8f20';ctx.stroke();
-    ctx.fillStyle='#f5d342';ellipse(ctx,x+.3*s,y+.5*s,.18*s,.2*s);
-    ctx.fillStyle='#111';
-    for(let i=0;i<3;i++)roundRect(ctx,x+.22*s,y+(.38+i*.1)*s,.16*s,s*.05,s*.01);
-    ctx.fillStyle='#f5d342';ellipse(ctx,x+.3*s,y+.3*s,.1*s,.08*s);
-    ctx.fillStyle='rgba(200,230,255,0.7)';
-    ctx.beginPath();ctx.ellipse(x+.18*s,y+.35*s,.1*s,.06*s,-0.4,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.ellipse(x+.2*s,y+.45*s,.1*s,.06*s,0.4,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#111';ellipse(ctx,x+.26*s,y+.27*s,.03*s,.03*s);
-    ellipse(ctx,x+.34*s,y+.27*s,.03*s,.03*s);
-  }},
-  {name:'mouse_cake2', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#888';ellipse(ctx,x+.5*s,y+.38*s,.2*s,.18*s);
-    ctx.fillStyle='#aaa';
-    roundRect(ctx,x+.3*s,y+.1*s,.1*s,.28*s,s*.05);
-    roundRect(ctx,x+.6*s,y+.1*s,.1*s,.28*s,s*.05);
-    ctx.fillStyle='#c8a06e';roundRect(ctx,x+.22*s,y+.6*s,.56*s,.24*s,s*.06);
-    ctx.fillStyle='#ff69b4';roundRect(ctx,x+.22*s,y+.53*s,.56*s,.12*s,s*.04);
-    ctx.fillStyle='#fff';
-    for(let i=0;i<4;i++)ellipse(ctx,x+(.3+i*.14)*s,y+.56*s,.03*s,.03*s);
-    ctx.fillStyle='#e74c3c';
-    ellipse(ctx,x+.36*s,y+.51*s,.04*s,.06*s);
-    ellipse(ctx,x+.5*s,y+.49*s,.04*s,.06*s);
-    ellipse(ctx,x+.64*s,y+.51*s,.04*s,.06*s);
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.36*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.36*s,.03*s,.03*s);
-  }},
-  {name:'rabbit_play', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#c8b89a';
-    roundRect(ctx,x+.35*s,y+.48*s,.3*s,.4*s,s*.08);
-    ctx.fillStyle='#d4c4a8';ellipse(ctx,x+.5*s,y+.42*s,.2*s,.2*s);
-    roundRect(ctx,x+.3*s,y+.1*s,.1*s,.32*s,s*.05);
-    roundRect(ctx,x+.6*s,y+.1*s,.1*s,.32*s,s*.05);
-    ctx.fillStyle='#f9b8c0';
-    roundRect(ctx,x+.33*s,y+.12*s,.05*s,.26*s,s*.03);
-    roundRect(ctx,x+.63*s,y+.12*s,.05*s,.26*s,s*.03);
-    ctx.fillStyle='#3498db';roundRect(ctx,x+.6*s,y+.55*s,.22*s,.15*s,s*.04);
-    ctx.fillStyle='#e74c3c';roundRect(ctx,x+.18*s,y+.55*s,.22*s,.15*s,s*.04);
-    ctx.fillStyle='#222';ellipse(ctx,x+.44*s,y+.4*s,.03*s,.03*s);
-    ellipse(ctx,x+.56*s,y+.4*s,.03*s,.03*s);
-    ctx.fillStyle='#c94040';ellipse(ctx,x+.5*s,y+.46*s,.03*s,.02*s);
-  }},
-  {name:'mole_gift', draw:(c,x,y,s)=>{
-    const ctx=c;s=s*.85;
-    ctx.fillStyle='#e74c3c';roundRect(ctx,x+.2*s,y+.55*s,.6*s,.32*s,s*.04);
-    ctx.fillStyle='#c0392b';ctx.fillRect(x+.2*s,y+.55*s,.6*s,s*.06);
-    ctx.fillStyle='#f1c40f';ctx.fillRect(x+.46*s,y+.55*s,s*.08,.32*s);
-    ctx.fillStyle='#f1c40f';
-    ctx.beginPath();ctx.arc(x+.5*s,y+.55*s,s*.1,-Math.PI,0);ctx.fill();
-    ctx.fillStyle='#e74c3c';ctx.beginPath();ctx.arc(x+.5*s,y+.55*s,s*.06,-Math.PI,0);ctx.fill();
-    ctx.fillStyle='#2d2d2d';ellipse(ctx,x+.5*s,y+.35*s,.25*s,.28*s);
-    ctx.fillStyle='#f4c06f';ellipse(ctx,x+.5*s,y+.26*s,.2*s,.2*s);
-    ctx.fillStyle='#c8964b';ellipse(ctx,x+.5*s,y+.34*s,.1*s,.08*s);
-    ctx.fillStyle='#111';ellipse(ctx,x+.44*s,y+.23*s,.04*s,.04*s);
-    ellipse(ctx,x+.56*s,y+.23*s,.04*s,.04*s);
-  }},
+// Each card: emoji (large), bg color, label, secondary emoji for detail
+const CARDS = [
+  {e:'🦔', bg:'#ffe8a1', label:'Igel', sub:''},
+  {e:'🐭', bg:'#e8e8e8', label:'Maus', sub:'🧀'},
+  {e:'🐇', bg:'#ffd6e7', label:'Hase', sub:''},
+  {e:'🐾', bg:'#c8e6c9', label:'Maulwurf', sub:'⛏️'},
+  {e:'🌸', bg:'#f8bbd0', label:'Blumen', sub:'🌼'},
+  {e:'🎂', bg:'#ffe0b2', label:'Torte', sub:'🕯️'},
+  {e:'⛱️', bg:'#b3e5fc', label:'Strand', sub:'☀️'},
+  {e:'🍄', bg:'#ffccbc', label:'Pilz', sub:''},
+  {e:'🎈', bg:'#e1bee7', label:'Ballon', sub:'🎉'},
+  {e:'🌂', bg:'#dcedc8', label:'Schirm', sub:'🌧️'},
+  {e:'🐝', bg:'#fff9c4', label:'Biene', sub:'🍐'},
+  {e:'🎁', bg:'#f8bbd0', label:'Geschenk', sub:'🎀'},
+  {e:'🚣', bg:'#b2ebf2', label:'Boot', sub:'🌊'},
+  {e:'🌻', bg:'#fff9c4', label:'Sonnenbl.', sub:''},
+  {e:'🎾', bg:'#ccff90', label:'Ball', sub:''},
+  {e:'🕯️', bg:'#ffe0b2', label:'Kerze', sub:'✨'},
+  {e:'🐿️', bg:'#d7ccc8', label:'Eichhörnchen', sub:'🌰'},
+  {e:'🧁', bg:'#fce4ec', label:'Muffin', sub:'🍓'},
+  {e:'🎻', bg:'#e8f5e9', label:'Musik', sub:'🎵'},
+  {e:'🦋', bg:'#e3f2fd', label:'Schmetterling', sub:''},
+  {e:'🍎', bg:'#ffebee', label:'Apfel', sub:''},
+  {e:'🌈', bg:'#e8eaf6', label:'Regenbogen', sub:''},
+  {e:'🐛', bg:'#f3e5f5', label:'Raupe', sub:'🌿'},
+  {e:'🎠', bg:'#e0f7fa', label:'Karussell', sub:''},
+  {e:'⭐', bg:'#fffde7', label:'Stern', sub:''},
+  {e:'🦊', bg:'#fbe9e7', label:'Fuchs', sub:''},
+  {e:'🌙', bg:'#e8eaf6', label:'Mond', sub:'🌟'},
+  {e:'🍓', bg:'#fce4ec', label:'Erdbeere', sub:''},
+  {e:'🐸', bg:'#e8f5e9', label:'Frosch', sub:'🌿'},
+  {e:'🌺', bg:'#fce4ec', label:'Blüte', sub:''},
+  {e:'🎪', bg:'#fff3e0', label:'Zirkus', sub:'🤹'},
+  {e:'🦉', bg:'#efebe9', label:'Eule', sub:'🌙'},
 ];
 
-function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
-function ellipse(ctx,cx,cy,rx,ry){ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.fill();}
+let diff=4, cards=[], flipped=[], matched=0, locked=false, moves=0, secs=0, tmr=null;
 
-let pairs=8,cards=[],flipped=[],matched=0,locked=false,moves=0,seconds=0,timer=null,diff=4;
-
-function setDiff(n){
+function setDiff(n,btn){
   diff=n;
   document.querySelectorAll('.dBtn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
 }
 
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=0|Math.random()*(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function startGame(){
   document.getElementById('msg').classList.remove('show');
-  clearInterval(timer);seconds=0;moves=0;matched=0;
+  clearInterval(tmr); secs=0; moves=0; matched=0; flipped=[]; locked=false;
   document.getElementById('moves').textContent='0';
   document.getElementById('timer').textContent='0:00';
-  
-  const total=diff*diff/2;
+
+  const total = diff*diff/2;
   document.getElementById('total').textContent=total;
   document.getElementById('found').textContent='0';
-  
-  const chosen=shuffle([...ANIMALS]).slice(0,total);
-  cards=shuffle([...chosen,...chosen].map((a,i)=>({id:i,animal:a,flipped:false,matched:false})));
-  
-  const board=document.getElementById('board');
-  board.style.gridTemplateColumns=`repeat(${diff},1fr)`;
-  board.innerHTML='';
-  
-  const boardW=Math.min(window.innerWidth,430)-20;
-  const size=Math.floor((boardW-(diff-1)*5)/diff);
-  
-  cards.forEach((card,i)=>{
-    const el=document.createElement('div');
-    el.className='card';
-    el.style.width=size+'px';
-    el.style.height=size+'px';
-    
-    const back=document.createElement('div');back.className='face back';
-    back.innerHTML=`<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.1)"/><text x="20" y="26" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.3)">🐾</text></svg>`;
-    
-    const front=document.createElement('div');front.className='face front';
-    const canvas=document.createElement('canvas');
-    canvas.width=size-6;canvas.height=size-6;
-    
-    const bgColors=['#ffe066','#b8f0d0','#b8d8ff','#ffd6e7','#e8d5ff','#ffe0b8','#d0f0ff','#fff0b8'];
-    const ctx=canvas.getContext('2d');
-    ctx.fillStyle=bgColors[i%bgColors.length];
-    ctx.beginPath();ctx.roundRect(0,0,canvas.width,canvas.height,8);ctx.fill();
-    
-    const s=canvas.width;
-    card.animal.draw(ctx,0,0,s);
-    
-    front.appendChild(canvas);
-    el.appendChild(back);el.appendChild(front);
-    el.addEventListener('click',()=>flipCard(i,el));
+
+  const pool = shuffle([...CARDS]).slice(0, total);
+  cards = shuffle([...pool, ...pool].map((c,i)=>({...c, idx:i, flipped:false, matched:false})));
+
+  const board = document.getElementById('board');
+  board.style.gridTemplateColumns = `repeat(${diff},1fr)`;
+  board.innerHTML = '';
+
+  const vw = Math.min(window.innerWidth, 430) - 20;
+  const sz = Math.floor((vw - (diff-1)*6) / diff);
+  const emojiSz = Math.floor(sz * 0.48);
+  const labelSz = Math.max(9, Math.floor(sz * 0.14));
+
+  cards.forEach((card, i) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.style.cssText = `width:${sz}px;height:${sz}px`;
+
+    // Back face
+    const back = document.createElement('div');
+    back.className = 'face back';
+    back.innerHTML = `<div class="back-icon" style="font-size:${Math.floor(sz*.38)}px">🐾</div>`;
+
+    // Front face
+    const front = document.createElement('div');
+    front.className = 'face front';
+    front.style.background = card.bg;
+    front.style.flexDirection = 'column';
+    front.style.gap = '1px';
+    front.style.padding = '4px';
+
+    const emo = document.createElement('div');
+    emo.className = 'card-emoji';
+    emo.style.fontSize = emojiSz + 'px';
+    emo.textContent = card.e;
+
+    const lbl = document.createElement('div');
+    lbl.className = 'card-label';
+    lbl.style.fontSize = labelSz + 'px';
+    // pick dark text color matching bg
+    lbl.style.color = '#333';
+    lbl.textContent = card.label;
+
+    front.appendChild(emo);
+    front.appendChild(lbl);
+
+    el.appendChild(back);
+    el.appendChild(front);
+    el.addEventListener('click', ()=>flip(i, el));
     board.appendChild(el);
-    card.el=el;
+    card.el = el;
   });
-  
-  flipped=[];locked=false;
-  timer=setInterval(()=>{
-    seconds++;
-    const m=Math.floor(seconds/60),s=seconds%60;
+
+  tmr = setInterval(()=>{
+    secs++;
+    const m=0|secs/60, s=secs%60;
     document.getElementById('timer').textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  },1000);
+  }, 1000);
 }
 
-function flipCard(i,el){
-  const card=cards[i];
-  if(locked||card.flipped||card.matched)return;
-  card.flipped=true;
+function flip(i, el){
+  const c = cards[i];
+  if(locked || c.flipped || c.matched) return;
+  c.flipped = true;
   el.classList.add('flip');
   flipped.push(i);
-  if(flipped.length===2){
-    locked=true;moves++;
-    document.getElementById('moves').textContent=moves;
-    const [a,b]=flipped;
-    if(cards[a].animal.name===cards[b].animal.name){
-      cards[a].matched=cards[b].matched=true;
+  if(flipped.length === 2){
+    locked = true;
+    moves++;
+    document.getElementById('moves').textContent = moves;
+    const [a, b] = flipped;
+    if(cards[a].e === cards[b].e){
+      cards[a].matched = cards[b].matched = true;
       cards[a].el.classList.add('matched');
       cards[b].el.classList.add('matched');
       matched++;
-      document.getElementById('found').textContent=matched;
-      flipped=[];locked=false;
-      if(matched===cards.length/2){
-        clearInterval(timer);
+      document.getElementById('found').textContent = matched;
+      flipped = []; locked = false;
+      if(matched === cards.length/2){
+        clearInterval(tmr);
         setTimeout(()=>{
-          const m=Math.floor(seconds/60),s=seconds%60;
-          document.getElementById('msgTitle').textContent='🎉 Gewonnen!';
-          document.getElementById('msgText').textContent=`Du hast alle ${matched} Paare in ${moves} Zügen und ${m}:${s.toString().padStart(2,'0')} Minuten gefunden!`;
+          const m=0|secs/60, s=secs%60;
+          document.getElementById('msgTitle').textContent = '🎉 Gewonnen!';
+          document.getElementById('msgText').textContent =
+            `Alle ${matched} Paare in ${moves} Zügen und ${m}:${s.toString().padStart(2,'0')} min gefunden!`;
           document.getElementById('msg').classList.add('show');
-        },600);
+        }, 700);
       }
     } else {
       setTimeout(()=>{
-        cards[a].flipped=cards[b].flipped=false;
+        cards[a].flipped = cards[b].flipped = false;
         cards[a].el.classList.remove('flip');
         cards[b].el.classList.remove('flip');
-        flipped=[];locked=false;
-      },1000);
+        flipped = []; locked = false;
+      }, 900);
     }
   }
 }
 
-window.addEventListener('load',()=>{
-  document.getElementById('msgTitle').textContent='🐾 Krtek Memory';
-  document.getElementById('msgText').textContent='Finde alle Paare! Wähle die Schwierigkeit und starte das Spiel.';
-  document.getElementById('msg').classList.add('show');
-});
+document.getElementById('msg').classList.add('show');
 </script>
 </body>
 </html>
