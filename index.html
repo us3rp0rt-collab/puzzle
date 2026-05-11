@@ -3,13 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Krtek Memory</title>
+<title>CZNLDE Memory</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:#1a0a2e;min-height:100dvh;display:flex;flex-direction:column;align-items:center}
 header{width:100%;padding:max(env(safe-area-inset-top),12px) 16px 6px;text-align:center}
-h1{font-size:20px;font-weight:700;color:#fff}
-h1 span{color:#ffd700}
+h1{font-size:22px;font-weight:700;color:#fff;letter-spacing:1px}
+.lang-row{display:flex;gap:10px;justify-content:center;margin:6px 0 4px}
+.lang-btn{background:rgba(255,255,255,0.1);border:2px solid transparent;border-radius:20px;padding:5px 12px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;display:flex;align-items:center;gap:6px;font-family:inherit;transition:all .2s}
+.lang-btn.active{border-color:#ffd700;background:rgba(255,215,0,0.18)}
+.lang-btn .flag{font-size:18px;line-height:1}
 .stats{display:flex;gap:8px;justify-content:center;margin:5px 0 8px;flex-wrap:wrap}
 .stat{background:rgba(255,255,255,0.12);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#fff}
 .stat em{color:#ffd700;font-style:normal}
@@ -19,30 +22,35 @@ h1 span{color:#ffd700}
 .card.matched{animation:pop .4s ease forwards}
 @keyframes pop{0%{transform:rotateY(180deg) scale(1)}50%{transform:rotateY(180deg) scale(1.1)}100%{transform:rotateY(180deg) scale(1)}}
 .face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
-.back{background:linear-gradient(135deg,#3d1a7a,#1a0a40);border:2.5px solid rgba(255,255,255,0.2);flex-direction:column;gap:2px}
-.back-icon{font-size:36px;opacity:.6}
+.back{background:linear-gradient(135deg,#3d1a7a,#1a0a40);border:2.5px solid rgba(255,255,255,0.2)}
+.back-icon{opacity:.6}
 .front{transform:rotateY(180deg);border:3px solid transparent;flex-direction:column;overflow:hidden}
 .card.matched .front{border-color:#ffd700;box-shadow:0 0 12px rgba(255,215,0,.5)}
 .card-emoji{line-height:1}
-.card-label{font-size:10px;font-weight:700;text-align:center;padding:0 2px;line-height:1.2;letter-spacing:-0.2px}
+.card-label{font-weight:700;text-align:center;padding:0 2px;line-height:1.2;letter-spacing:-0.2px;color:#333}
 #msg{position:fixed;inset:0;background:rgba(0,0,0,0.88);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;padding:24px}
 #msg.show{display:flex}
 .msg-box{background:#1a0a2e;border:2px solid #ffd700;border-radius:24px;padding:28px 24px;text-align:center;max-width:300px;width:100%}
 .msg-box h2{font-size:24px;color:#ffd700;margin-bottom:6px}
-.msg-box p{color:#fff;font-size:14px;line-height:1.5;margin-bottom:16px}
+.msg-box p{color:#fff;font-size:14px;line-height:1.5;margin-bottom:14px}
 .diff-row{display:flex;gap:8px;margin-bottom:14px}
 .dBtn{flex:1;padding:9px 4px;border-radius:20px;border:2px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
 .dBtn.active{background:#ffd700;color:#1a0a2e;border-color:#ffd700}
-.btn{background:#ffd700;color:#1a0a2e;border:none;border-radius:40px;padding:13px 36px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
-.btn:active{transform:scale(0.97)}
+.start-btn{background:#ffd700;color:#1a0a2e;border:none;border-radius:40px;padding:13px 36px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;width:100%}
+.start-btn:active{transform:scale(0.97)}
 </style>
 </head>
 <body>
 <header>
-  <h1>🐾 <span>Krtek</span> Memory</h1>
+  <h1>CZNLDE</h1>
+  <div class="lang-row">
+    <button class="lang-btn" onclick="setLang('de',this)"><span class="flag">🇩🇪</span>Deutsch</button>
+    <button class="lang-btn" onclick="setLang('nl',this)"><span class="flag">🇳🇱</span>Nederlands</button>
+    <button class="lang-btn" onclick="setLang('cs',this)"><span class="flag">🇨🇿</span>Čeština</button>
+  </div>
   <div class="stats">
-    <div class="stat">Züge: <em id="moves">0</em></div>
-    <div class="stat">Paare: <em id="found">0</em>/<em id="total">0</em></div>
+    <div class="stat" id="s-moves">Züge: <em id="moves">0</em></div>
+    <div class="stat" id="s-pairs">Paare: <em id="found">0</em>/<em id="total">0</em></div>
     <div class="stat">⏱ <em id="timer">0:00</em></div>
   </div>
 </header>
@@ -50,55 +58,86 @@ h1 span{color:#ffd700}
 
 <div id="msg">
   <div class="msg-box">
-    <h2 id="msgTitle">🐾 Krtek Memory</h2>
-    <p id="msgText">Finde alle Paare! Wähle die Schwierigkeit:</p>
+    <h2 id="msgTitle">🐾 Memory</h2>
+    <p id="msgText"></p>
     <div class="diff-row">
-      <button class="dBtn active" data-d="4" onclick="setDiff(4,this)">4×4<br><span style="font-size:10px;opacity:.7">8 Paare</span></button>
-      <button class="dBtn" data-d="6" onclick="setDiff(6,this)">6×6<br><span style="font-size:10px;opacity:.7">18 Paare</span></button>
-      <button class="dBtn" data-d="8" onclick="setDiff(8,this)">8×8<br><span style="font-size:10px;opacity:.7">32 Paare</span></button>
+      <button class="dBtn active" onclick="setDiff(4,this)">4×4<br><span style="font-size:10px;opacity:.7" id="d4lbl">8 Paare</span></button>
+      <button class="dBtn" onclick="setDiff(6,this)">6×6<br><span style="font-size:10px;opacity:.7" id="d6lbl">18 Paare</span></button>
+      <button class="dBtn" onclick="setDiff(8,this)">8×8<br><span style="font-size:10px;opacity:.7" id="d8lbl">32 Paare</span></button>
     </div>
-    <button class="btn" onclick="startGame()">▶ Spiel starten</button>
+    <button class="start-btn" id="startBtn" onclick="startGame()">▶ Spiel starten</button>
   </div>
 </div>
 
 <script>
-// Each card: emoji (large), bg color, label, secondary emoji for detail
-const CARDS = [
-  {e:'🦔', bg:'#ffe8a1', label:'Igel', sub:''},
-  {e:'🐭', bg:'#e8e8e8', label:'Maus', sub:'🧀'},
-  {e:'🐇', bg:'#ffd6e7', label:'Hase', sub:''},
-  {e:'🐾', bg:'#c8e6c9', label:'Maulwurf', sub:'⛏️'},
-  {e:'🌸', bg:'#f8bbd0', label:'Blumen', sub:'🌼'},
-  {e:'🎂', bg:'#ffe0b2', label:'Torte', sub:'🕯️'},
-  {e:'⛱️', bg:'#b3e5fc', label:'Strand', sub:'☀️'},
-  {e:'🍄', bg:'#ffccbc', label:'Pilz', sub:''},
-  {e:'🎈', bg:'#e1bee7', label:'Ballon', sub:'🎉'},
-  {e:'🌂', bg:'#dcedc8', label:'Schirm', sub:'🌧️'},
-  {e:'🐝', bg:'#fff9c4', label:'Biene', sub:'🍐'},
-  {e:'🎁', bg:'#f8bbd0', label:'Geschenk', sub:'🎀'},
-  {e:'🚣', bg:'#b2ebf2', label:'Boot', sub:'🌊'},
-  {e:'🌻', bg:'#fff9c4', label:'Sonnenbl.', sub:''},
-  {e:'🎾', bg:'#ccff90', label:'Ball', sub:''},
-  {e:'🕯️', bg:'#ffe0b2', label:'Kerze', sub:'✨'},
-  {e:'🐿️', bg:'#d7ccc8', label:'Eichhörnchen', sub:'🌰'},
-  {e:'🧁', bg:'#fce4ec', label:'Muffin', sub:'🍓'},
-  {e:'🎻', bg:'#e8f5e9', label:'Musik', sub:'🎵'},
-  {e:'🦋', bg:'#e3f2fd', label:'Schmetterling', sub:''},
-  {e:'🍎', bg:'#ffebee', label:'Apfel', sub:''},
-  {e:'🌈', bg:'#e8eaf6', label:'Regenbogen', sub:''},
-  {e:'🐛', bg:'#f3e5f5', label:'Raupe', sub:'🌿'},
-  {e:'🎠', bg:'#e0f7fa', label:'Karussell', sub:''},
-  {e:'⭐', bg:'#fffde7', label:'Stern', sub:''},
-  {e:'🦊', bg:'#fbe9e7', label:'Fuchs', sub:''},
-  {e:'🌙', bg:'#e8eaf6', label:'Mond', sub:'🌟'},
-  {e:'🍓', bg:'#fce4ec', label:'Erdbeere', sub:''},
-  {e:'🐸', bg:'#e8f5e9', label:'Frosch', sub:'🌿'},
-  {e:'🌺', bg:'#fce4ec', label:'Blüte', sub:''},
-  {e:'🎪', bg:'#fff3e0', label:'Zirkus', sub:'🤹'},
-  {e:'🦉', bg:'#efebe9', label:'Eule', sub:'🌙'},
+const T = {
+  de:{
+    moves:'Züge', pairs:'Paare', start:'▶ Spiel starten',
+    welcome:'Finde alle Paare! Wähle die Schwierigkeit:',
+    won:'🎉 Gewonnen!',
+    wonMsg:(p,m,t)=>`Alle ${p} Paare in ${m} Zügen und ${t} Min gefunden!`,
+    pair:'Paare', diff:['8 Paare','18 Paare','32 Paare'],
+    labels:['Igel','Maus','Hase','Maulwurf','Blumen','Torte','Strand','Pilz','Ballon','Schirm','Biene','Geschenk','Boot','Sonnenbl.','Ball','Kerze','Eichhörnch.','Muffin','Musik','Schmetterl.','Apfel','Regenbogen','Raupe','Karussell','Stern','Fuchs','Mond','Erdbeere','Frosch','Blüte','Zirkus','Eule']
+  },
+  nl:{
+    moves:'Zetten', pairs:'Paren', start:'▶ Spel starten',
+    welcome:'Zoek alle paren! Kies de moeilijkheid:',
+    won:'🎉 Gewonnen!',
+    wonMsg:(p,m,t)=>`Alle ${p} paren in ${m} zetten en ${t} min gevonden!`,
+    pair:'Paren', diff:['8 Paren','18 Paren','32 Paren'],
+    labels:['Egel','Muis','Konijn','Mol','Bloemen','Taart','Strand','Paddenstoel','Ballon','Paraplu','Bij','Cadeau','Boot','Zonnebloem','Bal','Kaars','Eekhoorn','Muffin','Muziek','Vlinder','Appel','Regenboog','Rups','Carrousel','Ster','Vos','Maan','Aardbei','Kikker','Bloesem','Circus','Uil']
+  },
+  cs:{
+    moves:'Tahy', pairs:'Páry', start:'▶ Spustit hru',
+    welcome:'Najdi všechny páry! Vyber obtížnost:',
+    won:'🎉 Výhra!',
+    wonMsg:(p,m,t)=>`Všechny ${p} páry za ${m} tahů a ${t} min!`,
+    pair:'Páry', diff:['8 Párů','18 Párů','32 Párů'],
+    labels:['Ježek','Myš','Králík','Krtek','Květiny','Dort','Pláž','Houba','Balónek','Deštník','Včela','Dárek','Loďka','Slunečnice','Míč','Svíčka','Veverka','Muffin','Hudba','Motýl','Jablko','Duha','Housenka','Kolotoč','Hvězda','Liška','Měsíc','Jahoda','Žabka','Květ','Cirkus','Sova']
+  }
+};
+
+const CARDS_BASE = [
+  {e:'🦔',bg:'#ffe8a1'},{e:'🐭',bg:'#e8e8e8'},{e:'🐇',bg:'#ffd6e7'},
+  {e:'🐾',bg:'#c8e6c9'},{e:'🌸',bg:'#f8bbd0'},{e:'🎂',bg:'#ffe0b2'},
+  {e:'⛱️',bg:'#b3e5fc'},{e:'🍄',bg:'#ffccbc'},{e:'🎈',bg:'#e1bee7'},
+  {e:'🌂',bg:'#dcedc8'},{e:'🐝',bg:'#fff9c4'},{e:'🎁',bg:'#f8bbd0'},
+  {e:'🚣',bg:'#b2ebf2'},{e:'🌻',bg:'#fff9c4'},{e:'🎾',bg:'#ccff90'},
+  {e:'🕯️',bg:'#ffe0b2'},{e:'🐿️',bg:'#d7ccc8'},{e:'🧁',bg:'#fce4ec'},
+  {e:'🎵',bg:'#e8f5e9'},{e:'🦋',bg:'#e3f2fd'},{e:'🍎',bg:'#ffebee'},
+  {e:'🌈',bg:'#e8eaf6'},{e:'🐛',bg:'#f3e5f5'},{e:'🎠',bg:'#e0f7fa'},
+  {e:'⭐',bg:'#fffde7'},{e:'🦊',bg:'#fbe9e7'},{e:'🌙',bg:'#e8eaf6'},
+  {e:'🍓',bg:'#fce4ec'},{e:'🐸',bg:'#e8f5e9'},{e:'🌺',bg:'#fce4ec'},
+  {e:'🎪',bg:'#fff3e0'},{e:'🦉',bg:'#efebe9'}
 ];
 
-let diff=4, cards=[], flipped=[], matched=0, locked=false, moves=0, secs=0, tmr=null;
+let lang='de', diff=4, cards=[], flipped=[], matched=0, locked=false, moves=0, secs=0, tmr=null;
+
+function setLang(l, btn){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  applyLang();
+}
+
+function applyLang(){
+  const t=T[lang];
+  document.getElementById('s-moves').childNodes[0].textContent=t.moves+': ';
+  document.getElementById('s-pairs').childNodes[0].textContent=t.pairs+': ';
+  document.getElementById('startBtn').textContent=t.start;
+  document.getElementById('d4lbl').textContent=t.diff[0];
+  document.getElementById('d6lbl').textContent=t.diff[1];
+  document.getElementById('d8lbl').textContent=t.diff[2];
+  // update card labels if board exists
+  document.querySelectorAll('.card-label').forEach(el=>{
+    const idx=parseInt(el.dataset.idx);
+    if(!isNaN(idx)) el.textContent=t.labels[idx];
+  });
+  // update welcome if msg visible
+  if(document.getElementById('msg').classList.contains('show') && document.getElementById('msgTitle').textContent!==t.won){
+    document.getElementById('msgText').textContent=t.welcome;
+  }
+}
 
 function setDiff(n,btn){
   diff=n;
@@ -113,110 +152,110 @@ function startGame(){
   clearInterval(tmr); secs=0; moves=0; matched=0; flipped=[]; locked=false;
   document.getElementById('moves').textContent='0';
   document.getElementById('timer').textContent='0:00';
-
-  const total = diff*diff/2;
+  const t=T[lang];
+  const total=diff*diff/2;
   document.getElementById('total').textContent=total;
   document.getElementById('found').textContent='0';
 
-  const pool = shuffle([...CARDS]).slice(0, total);
-  cards = shuffle([...pool, ...pool].map((c,i)=>({...c, idx:i, flipped:false, matched:false})));
+  const pool=shuffle(CARDS_BASE.map((c,i)=>({...c,labelIdx:i}))).slice(0,total);
+  cards=shuffle([...pool,...pool].map((c,i)=>({...c,idx:i,flipped:false,matched:false})));
 
-  const board = document.getElementById('board');
-  board.style.gridTemplateColumns = `repeat(${diff},1fr)`;
-  board.innerHTML = '';
+  const board=document.getElementById('board');
+  board.style.gridTemplateColumns=`repeat(${diff},1fr)`;
+  board.innerHTML='';
 
-  const vw = Math.min(window.innerWidth, 430) - 20;
-  const sz = Math.floor((vw - (diff-1)*6) / diff);
-  const emojiSz = Math.floor(sz * 0.48);
-  const labelSz = Math.max(9, Math.floor(sz * 0.14));
+  const vw=Math.min(window.innerWidth,430)-20;
+  const sz=Math.floor((vw-(diff-1)*6)/diff);
+  const emojiSz=Math.floor(sz*.46);
+  const labelSz=Math.max(8,Math.floor(sz*.13));
 
-  cards.forEach((card, i) => {
-    const el = document.createElement('div');
-    el.className = 'card';
-    el.style.cssText = `width:${sz}px;height:${sz}px`;
+  cards.forEach((card,i)=>{
+    const el=document.createElement('div');
+    el.className='card';
+    el.style.cssText=`width:${sz}px;height:${sz}px`;
 
-    // Back face
-    const back = document.createElement('div');
-    back.className = 'face back';
-    back.innerHTML = `<div class="back-icon" style="font-size:${Math.floor(sz*.38)}px">🐾</div>`;
+    const back=document.createElement('div');
+    back.className='face back';
+    const bi=document.createElement('div');
+    bi.className='back-icon';
+    bi.style.fontSize=Math.floor(sz*.36)+'px';
+    bi.textContent='🐾';
+    back.appendChild(bi);
 
-    // Front face
-    const front = document.createElement('div');
-    front.className = 'face front';
-    front.style.background = card.bg;
-    front.style.flexDirection = 'column';
-    front.style.gap = '1px';
-    front.style.padding = '4px';
+    const front=document.createElement('div');
+    front.className='face front';
+    front.style.cssText=`background:${card.bg};flex-direction:column;gap:1px;padding:4px`;
 
-    const emo = document.createElement('div');
-    emo.className = 'card-emoji';
-    emo.style.fontSize = emojiSz + 'px';
-    emo.textContent = card.e;
+    const emo=document.createElement('div');
+    emo.className='card-emoji';
+    emo.style.fontSize=emojiSz+'px';
+    emo.textContent=card.e;
 
-    const lbl = document.createElement('div');
-    lbl.className = 'card-label';
-    lbl.style.fontSize = labelSz + 'px';
-    // pick dark text color matching bg
-    lbl.style.color = '#333';
-    lbl.textContent = card.label;
+    const lbl=document.createElement('div');
+    lbl.className='card-label';
+    lbl.style.fontSize=labelSz+'px';
+    lbl.dataset.idx=card.labelIdx;
+    lbl.textContent=t.labels[card.labelIdx];
 
     front.appendChild(emo);
     front.appendChild(lbl);
-
     el.appendChild(back);
     el.appendChild(front);
-    el.addEventListener('click', ()=>flip(i, el));
+    el.addEventListener('click',()=>flip(i,el));
     board.appendChild(el);
-    card.el = el;
+    card.el=el;
   });
 
-  tmr = setInterval(()=>{
+  tmr=setInterval(()=>{
     secs++;
-    const m=0|secs/60, s=secs%60;
+    const m=0|secs/60,s=secs%60;
     document.getElementById('timer').textContent=`${m}:${s.toString().padStart(2,'0')}`;
-  }, 1000);
+  },1000);
 }
 
-function flip(i, el){
-  const c = cards[i];
-  if(locked || c.flipped || c.matched) return;
-  c.flipped = true;
-  el.classList.add('flip');
-  flipped.push(i);
-  if(flipped.length === 2){
-    locked = true;
-    moves++;
-    document.getElementById('moves').textContent = moves;
-    const [a, b] = flipped;
-    if(cards[a].e === cards[b].e){
-      cards[a].matched = cards[b].matched = true;
+function flip(i,el){
+  const c=cards[i];
+  if(locked||c.flipped||c.matched) return;
+  c.flipped=true; el.classList.add('flip'); flipped.push(i);
+  if(flipped.length===2){
+    locked=true; moves++;
+    document.getElementById('moves').textContent=moves;
+    const [a,b]=flipped;
+    if(cards[a].e===cards[b].e){
+      cards[a].matched=cards[b].matched=true;
       cards[a].el.classList.add('matched');
       cards[b].el.classList.add('matched');
       matched++;
-      document.getElementById('found').textContent = matched;
-      flipped = []; locked = false;
-      if(matched === cards.length/2){
+      document.getElementById('found').textContent=matched;
+      flipped=[];locked=false;
+      if(matched===cards.length/2){
         clearInterval(tmr);
         setTimeout(()=>{
-          const m=0|secs/60, s=secs%60;
-          document.getElementById('msgTitle').textContent = '🎉 Gewonnen!';
-          document.getElementById('msgText').textContent =
-            `Alle ${matched} Paare in ${moves} Zügen und ${m}:${s.toString().padStart(2,'0')} min gefunden!`;
+          const t=T[lang],m=0|secs/60,s=secs%60,ts=`${m}:${s.toString().padStart(2,'0')}`;
+          document.getElementById('msgTitle').textContent=t.won;
+          document.getElementById('msgText').textContent=t.wonMsg(matched,moves,ts);
           document.getElementById('msg').classList.add('show');
-        }, 700);
+        },700);
       }
     } else {
       setTimeout(()=>{
-        cards[a].flipped = cards[b].flipped = false;
+        cards[a].flipped=cards[b].flipped=false;
         cards[a].el.classList.remove('flip');
         cards[b].el.classList.remove('flip');
-        flipped = []; locked = false;
-      }, 900);
+        flipped=[];locked=false;
+      },900);
     }
   }
 }
 
-document.getElementById('msg').classList.add('show');
+// init
+(()=>{
+  // default lang DE + active button
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>{if(i===0)b.classList.add('active');});
+  applyLang();
+  document.getElementById('msgText').textContent=T[lang].welcome;
+  document.getElementById('msg').classList.add('show');
+})();
 </script>
 </body>
 </html>
